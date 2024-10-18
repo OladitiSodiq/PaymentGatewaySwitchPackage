@@ -8,8 +8,8 @@
 3. [Configuration](#configuration)
 4. [Usage](#usage)
 5. [Use Cases](#use-cases)
-6. [Testing](#testing)
-7. [License](#license)
+<!-- 6. [Testing](#testing)
+7. [License](#license) -->
 
 ---
 
