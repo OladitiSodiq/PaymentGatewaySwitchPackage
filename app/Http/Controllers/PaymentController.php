@@ -15,8 +15,6 @@ class PaymentController extends Controller
         $data = [
             'amount' => $request->input('amount'),
             'location' => $request->input('location'),
-          
-            
         ];
 
         try {
