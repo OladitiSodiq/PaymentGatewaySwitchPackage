@@ -11,6 +11,8 @@ class FlutterwaveService
         return config('config.flutterwave.status') === 'active';
         //availability will be if there is downtime form flutterwave.
         //this will be done through connecting to flutterwaveee  ApI
+
+          //DUE TO time and availability of keys to test normall for the api , i decided to fix this up from the env file down to the config.
        
     }
 
