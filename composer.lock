@@ -2367,7 +2367,7 @@
         },
         {
             "name": "oladitisodiq/paymentsgatewayswitch",
-            "version": "dev-main",
+            "version": "dev-master",
             "dist": {
                 "type": "path",
                 "url": "./packages/oladitisodiq/PaymentsGatewaySwitch",
