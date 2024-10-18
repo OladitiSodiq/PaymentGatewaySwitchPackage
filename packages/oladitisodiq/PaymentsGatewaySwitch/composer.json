@@ -1,0 +1,16 @@
+{
+    "name": "oladitisodiq/paymentsgatewayswitch",
+    "description": "This Package main functionality is to switch payment gateway based on availability, balance in payment gateway account, currency ,location more features canbe taking into considerations.",
+    "autoload": {
+        "psr-4": {
+            "Oladitisodiq\\Paymentsgatewayswitch\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "oladitisodiq",
+            "email": "oladitisodiq@email.com"
+        }
+    ],
+    "require": {}
+}
