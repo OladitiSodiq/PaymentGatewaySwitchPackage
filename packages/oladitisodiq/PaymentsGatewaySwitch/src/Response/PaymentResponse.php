@@ -28,5 +28,7 @@ class PaymentResponse
             'status' => $this->status,
             'message' => $this->message,
         ];
+
+        
     }
 }

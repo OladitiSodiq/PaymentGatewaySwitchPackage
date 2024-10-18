@@ -94,7 +94,7 @@ You can use the PaymentsGatewaySwitch facade to initiate payments. Here’s how 
             public function processPayment(Request $request)
             {
 
-                // dd("isisjs");
+             
                 $data = [
                     'amount' => $request->input('amount'),
                     'location' => $request->input('location'),
@@ -117,9 +117,70 @@ Define a route to handle payment processing in your routes/api.php file: to test
     Route::post('/pay', [PaymentController::class, 'processPayment']);
 ```
 
-## Use Case Examples
+### Use Case Examples
+
 1. Payment Gateway is Unavailable
-1. Payment Gateway Balance is insufficient 
-1. Payment Gateway is Unavailable based on location 
+
+    A user wants to pay 10,000 NGN from Nigeria.
+        
+    The package will check isAvailable() status and balance for Paystack first. Since Paystack meets all conditions, the payment is processed through Paystack.
+
+
+2. Payment Gateway Balance is insufficient 
+
+    A user wants to pay 20,000 NGN from Nigeria.
+
+    paystack balance:10,000 NGN
+
+    flutterwave balance : 40,000 NGN
+
+    Paystack is checked first but it has insufficient balance, so the package logs this and continues with Flutterwave, to processes the payment.
+
+
+3. Payment Gateway is Unavailable based on location 
+
+    A user wants to pay 50 usd from the United state.
+
+    Paystack: USD not supported
+    Flutterwave: Supported foriegn payment.
+
+    Paystack is skipped due to Flutterwave support forign payment.
+
+3. No Suitable Gateway Available
+
+    A user tries to pay 100 INR (India Rupee).
+
+    Paystack: Active, balance sufficient, but does not support INR.
+    Flutterwave: Active, but also does not support INR.
+     The package iterates through each gateway but finds no support for INR, resulting in an exception: "No suitable payment gateway available."
+
+
+### Example Request
+
+```http 
+POST: /api/pay
+Host: yourwebsite.com or Localhost
+Content-Type: application/json
+
+{
+    "amount": 5000,
+    "location": "NGN",
+}
+```
+
+### Example Response 
+
+```
+    {
+        "provider": "Paystack",
+        "apiUrl": "https:\/\/api.paystack.co",
+        "apiKey": "your_paystack_api_key",
+        "status": true,
+        "message": "Payment successful via Paystack."
+    }
+```
+
+
+
 
 
