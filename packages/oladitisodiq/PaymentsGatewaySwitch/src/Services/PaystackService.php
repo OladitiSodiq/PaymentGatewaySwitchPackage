@@ -17,6 +17,10 @@ class PaystackService
             //DUE TO time and availability of keys to test normall for the api , i decided to fix this up from the env file down to the config.
     }
 
+    public function getName()
+    {
+        return 'Paystack';
+    }
     public function checkBalance()
     {
          // Implement logic to check Flutterwave's balance.
