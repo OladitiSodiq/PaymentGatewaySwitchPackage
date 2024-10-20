@@ -1,8 +1,7 @@
 <?php
+
 namespace PaymentsGatewaySwitch;
 
-
-// use Exception;
 use Illuminate\Support\Facades\Log;
 use PaymentsGatewaySwitch\Response\PaymentResponse;
 
@@ -23,13 +22,19 @@ class PaymentsGatewaySwitch
         return $this->currencyMapping[$location] ?? config('config.default_currency');
     }
 
+    protected function calculateTotalWithCharges($amount, $chargePercentage)
+    {
+        return $amount + ($amount * $chargePercentage / 100);
+    }
+
     protected function switchPaymentGateway(array $data)
     {
+        // dd($data);
         $currency = $this->getCurrencyForLocation($data['location']);
         $amount = $data['amount'];
         $suitableGateways = [];
 
-        // help Collect all suitable gateways for the payment attempt.
+        // Collect all suitable gateways for the payment attempt.
         foreach ($this->gateways as $gateway) {
             if (!$gateway->isAvailable()) {
                 Log::info("Gateway {$gateway->getName()} is not available. Skipping to the next.");
@@ -41,22 +46,35 @@ class PaymentsGatewaySwitch
                 continue;
             }
 
-            if ($gateway->checkBalance() < $amount) {
-                Log::info("Gateway {$gateway->getName()} does not have sufficient balance for the amount: $amount. Skipping to the next.");
+            // Calculate the total amount including the charges for this gateway.
+            $chargePercentage = $gateway->getChargePercentage();
+            $totalAmount = $this->calculateTotalWithCharges($amount, $chargePercentage);
+
+            // dd( $amount);
+
+            if ($gateway->checkBalance() < $totalAmount) {
+                Log::info("Gateway {$gateway->getName()} does not have sufficient balance for the total amount: $totalAmount. Skipping to the next.");
                 continue;
             }
 
             // Add to the list of suitable gateways for potential fallback.
-            $suitableGateways[] = $gateway;
+            $suitableGateways[] = [
+                'gateway' => $gateway,
+                'total_amount' => $totalAmount,
+                'charge' => $chargePercentage,
+            ];
         }
 
-      
-        foreach ($suitableGateways as $gateway) {
+        
+        foreach ($suitableGateways as $gatewayData) {
+            $gateway = $gatewayData['gateway'];
+            $totalAmount = $gatewayData['total_amount'];
+
             try {
-                Log::info("Attempting payment with {$gateway->getName()}.");
-                return $gateway->pay($data);
+                Log::info("Attempting payment with {$gateway->getName()} with a total amount of {$totalAmount} including charges.");
+                return $gateway->pay(array_merge($data, ['total_amount' => $totalAmount, 'charge' => $gatewayData['charge']]));
             } catch (\Exception $e) {
-                // Log the failure and try the next suitable gateway.
+                 // Log the failure and try the next suitable gateway.
                 Log::error("Payment through {$gateway->getName()} failed: " . $e->getMessage());
             }
         }

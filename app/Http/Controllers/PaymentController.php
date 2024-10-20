@@ -16,6 +16,7 @@ class PaymentController extends Controller
             'amount' => $request->input('amount'),
             'location' => $request->input('location'),
         ];
+       
 
         try {
             $response = PaymentsGatewaySwitch::pay($data);

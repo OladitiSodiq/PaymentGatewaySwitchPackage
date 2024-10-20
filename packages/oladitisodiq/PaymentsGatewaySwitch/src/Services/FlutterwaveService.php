@@ -19,7 +19,7 @@ class FlutterwaveService
     }
     public function getName()
     {
-        return 'FlutterwaveService cc';
+        return 'FlutterwaveService ';
     }
 
     public function checkBalance()
@@ -36,6 +36,11 @@ class FlutterwaveService
         // Example: Flutterwave supports NGN, GHS, KES, USD
         return in_array($currency, ['NGN', 'GHS', 'KES', 'USD']);
     }
+    public function getChargePercentage()
+    {
+        return 2.5;
+         // Note: charges are meant to come from thr api calls too 
+    }
 
     public function pay(array $data)
     {
@@ -44,9 +49,10 @@ class FlutterwaveService
             'Flutterwave',
             config('config.gateways.flutterwave.api_url'),
             config('config.gateways.flutterwave.api_key'),
+            $data['total_amount'],
+            $data['charge'],
             true,
             'Payment successful via Flutterwave.'
         );
     }
 }
-

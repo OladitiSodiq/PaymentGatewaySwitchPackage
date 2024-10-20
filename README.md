@@ -176,7 +176,9 @@ Content-Type: application/json
         "apiUrl": "https:\/\/api.paystack.co",
         "apiKey": "your_paystack_api_key",
         "status": true,
-        "message": "Payment successful via Paystack."
+        "message": "Payment successful via Paystack.",
+        "amount": 5175,
+        "charges": 3.5
     }
 ```
 
