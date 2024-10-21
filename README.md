@@ -164,7 +164,7 @@ Content-Type: application/json
 
 {
     "amount": 5000,
-    "location": "NGN",
+    "location": "Nigeria",
 }
 ```
 
